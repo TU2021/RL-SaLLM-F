@@ -111,10 +111,10 @@ class Workspace(object):
         self.llm_query_accuracy = 0
         self.llm_label_accuracy = 0
 
-        # Check if there is a checkpoint to resume from
-        self.checkpoint_path = os.path.join(self.work_dir, 'checkpoint.pth')
-        if os.path.exists(self.checkpoint_path):
-            self.load_checkpoint()
+        # # Check if there is a checkpoint to resume from
+        # self.checkpoint_path = os.path.join(self.work_dir, 'checkpoint.pth')
+        # if os.path.exists(self.checkpoint_path):
+        #     self.load_checkpoint()
         # else:
             # Initialize environment, agent, replay buffer, and reward model from scratch
             # self._initialize_from_scratch()
@@ -436,9 +436,9 @@ class Workspace(object):
             if self.cfg.traj_action:
                 reward_hat = self.reward_model.r_hat(np.concatenate([obs, action], axis=-1))
             else:
-                # reward_hat = self.reward_model.r_hat(obs)
-                obs_reward = np.concatenate([obs[0:2], obs[4:6]], axis=-1)
-                reward_hat = self.reward_model.r_hat(obs_reward)
+                reward_hat = self.reward_model.r_hat(obs)
+                # obs_reward = np.concatenate([obs[0:2], obs[4:6]], axis=-1)
+                # reward_hat = self.reward_model.r_hat(obs_reward)
 
             # allow infinite bootstrap
             done = float(done)
@@ -450,8 +450,8 @@ class Workspace(object):
                 episode_success = max(episode_success, extra['success'])
                 
             # adding data to the reward training data
-            # self.reward_model.add_data(obs, action, reward, done)
-            self.reward_model.add_data(obs_reward, action, reward, done)
+            self.reward_model.add_data(obs, action, reward, done)
+            # self.reward_model.add_data(obs_reward, action, reward, done)
             self.replay_buffer.add(
                 obs, action, reward_hat, 
                 next_obs, done, done_no_max)

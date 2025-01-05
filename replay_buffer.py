@@ -86,8 +86,8 @@ class ReplayBuffer(object):
             if self.traj_action:
                 inputs = np.concatenate([obses, actions], axis=-1)
             else:
-                inputs = np.concatenate([obses[:,0:2], obses[:,-2:]], axis=-1)
-                # inputs = obses
+                # inputs = np.concatenate([obses[:,0:2], obses[:,-2:]], axis=-1)
+                inputs = obses
                 
             pred_reward = predictor.r_hat_batch(inputs)
             self.rewards[index*batch_size:last_index] = pred_reward
